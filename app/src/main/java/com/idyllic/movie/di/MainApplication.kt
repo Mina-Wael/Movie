@@ -1,4 +1,7 @@
 package com.idyllic.movie.di
 
-class MianApplication {
-}
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class MainApplication : Application()
