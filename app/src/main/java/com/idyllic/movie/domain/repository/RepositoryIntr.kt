@@ -1,8 +1,12 @@
 package com.idyllic.movie.domain.repository
 
-import com.idyllic.movie.domain.model.TopRatedMovie
+import com.idyllic.movie.domain.model.MoviePojoResult
+import com.idyllic.movie.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface RepositoryIntr {
 
-    suspend fun getTopRatedMovies(): TopRatedMovie
+    suspend fun getTopRatedMovies(): Flow<Resource<MoviePojoResult>>
+
+    suspend fun search(query: String, page: Int): Flow<Resource<MoviePojoResult>>
 }
