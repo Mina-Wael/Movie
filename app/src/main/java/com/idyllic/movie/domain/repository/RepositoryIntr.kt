@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface RepositoryIntr {
 
-    suspend fun getTopRatedMovies(): Flow<Resource<MoviePojoResult>>
+     fun getTopRatedMovies(): Flow<Resource<MoviePojoResult>>
 
     suspend fun search(query: String, page: Int): Flow<Resource<MoviePojoResult>>
 }
