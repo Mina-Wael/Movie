@@ -9,7 +9,10 @@ import retrofit2.http.Query
 interface MovieApi {
 
     @GET("movie/top_rated")
-    suspend fun getTopRatedMovies(@Query("api_key") apiKey: String = Constants.API_KEY): Response<MoviePojoResult>
+    suspend fun getTopRatedMovies(
+        @Query("api_key") apiKey: String = Constants.API_KEY,
+        @Query("page") page: Int
+    ): Response<MoviePojoResult>
 
     @GET("search/movie")
     suspend fun search(

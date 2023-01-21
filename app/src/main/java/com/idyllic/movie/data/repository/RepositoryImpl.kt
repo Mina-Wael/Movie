@@ -1,5 +1,6 @@
 package com.idyllic.movie.data.repository
 
+import android.util.Log
 import com.idyllic.movie.data.remotesource.MovieApi
 import com.idyllic.movie.domain.model.MoviePojoResult
 import com.idyllic.movie.domain.repository.RepositoryIntr
@@ -12,10 +13,10 @@ import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(private val api: MovieApi) : RepositoryIntr {
 
-    override suspend fun getTopRatedMovies(): Flow<Resource<MoviePojoResult>> = flow {
+    override fun getTopRatedMovies(): Flow<Resource<MoviePojoResult>> = flow {
         emit(Resource.Loading)
         try {
-            val res = api.getTopRatedMovies()
+            val res = api.getTopRatedMovies(page = 2)
             if (res.isSuccessful)
                 emit(Resource.Success(res.body()!!))
             else
