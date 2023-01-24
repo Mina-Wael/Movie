@@ -16,6 +16,7 @@ import androidx.paging.LoadStates
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idyllic.movie.databinding.FragmentHomeBinding
+import com.idyllic.movie.domain.model.Movie
 import com.idyllic.movie.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -89,7 +90,7 @@ class Home : Fragment() {
 
 
     private fun setUpMainRecycler() {
-        _mainRecyclerAdapter = MainRecycleAdapter(MovieDiffUtil)
+        _mainRecyclerAdapter = MainRecycleAdapter(MovieDiffUtil,onItemClick)
         binding.mainRecycler.apply {
             adapter = mainRecyclerAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
@@ -103,5 +104,7 @@ class Home : Fragment() {
         }
         binding.viewPagerDots.attachTo(binding.viewPager)
     }
+
+    private val onItemClick = fun(movie: Movie) {}
 
 }
