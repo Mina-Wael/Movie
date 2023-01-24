@@ -25,28 +25,18 @@
                 android:layout_height="match_parent"
                 android:paddingBottom="15dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/app_icon"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="15dp"
-                    android:src="@drawable/mina_img"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="50dp"
-                    android:text="Movie"
+                    android:text="Home"
                     android:textColor="@color/white"
+                    android:layout_marginTop="25dp"
                     android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="@id/app_icon"
-                    app:layout_constraintStart_toEndOf="@id/app_icon"
-                    app:layout_constraintTop_toTopOf="@id/app_icon" />
+                    app:layout_constraintStart_toStartOf="@id/search_card"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/search_card"
@@ -58,7 +48,7 @@
                     app:cardUseCompatPadding="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/app_icon"
+                    app:layout_constraintTop_toBottomOf="@id/title"
                     app:layout_constraintWidth_percent="0.9">
 
                     <androidx.appcompat.widget.SearchView

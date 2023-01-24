@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
@@ -61,7 +62,7 @@ class Home : Fragment() {
         setUpMainRecycler()
         setupSearch()
 
-        _searchAdapter = MainRecycleAdapter(MovieDiffUtil)
+        _searchAdapter = MainRecycleAdapter(MovieDiffUtil, onItemClick)
 
         viewModel.getTopRatedMovie()
 
@@ -144,7 +145,7 @@ class Home : Fragment() {
 
 
     private fun setUpMainRecycler() {
-        _mainRecyclerAdapter = MainRecycleAdapter(MovieDiffUtil)
+        _mainRecyclerAdapter = MainRecycleAdapter(MovieDiffUtil, onItemClick)
         binding.mainRecycler.apply {
             adapter = mainRecyclerAdapter
             layoutManager = GridLayoutManager(requireContext(), 2)
@@ -167,6 +168,10 @@ class Home : Fragment() {
     private fun showViewPager() {
         binding.viewPager.visibility = View.VISIBLE
         binding.viewPagerDots.visibility = View.VISIBLE
+    }
+
+    private val onItemClick = fun(movie: Movie) {
+        findNavController().navigate(HomeDirections.actionHome2ToDetails(movie))
     }
 
 }

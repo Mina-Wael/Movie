@@ -12,7 +12,10 @@ import com.idyllic.movie.databinding.HomeRecyclerRowBinding
 import com.idyllic.movie.domain.model.Movie
 import com.idyllic.movie.utils.Constants
 
-class MainRecycleAdapter(private val movieDiffUtil: DiffUtil.ItemCallback<Movie>) :
+class MainRecycleAdapter(
+    private val movieDiffUtil: DiffUtil.ItemCallback<Movie>,
+    private val onItemClick: (Movie) -> Unit
+) :
     PagingDataAdapter<Movie, MainRecycleAdapter.MainViewHolder>(movieDiffUtil) {
 
 
@@ -26,6 +29,12 @@ class MainRecycleAdapter(private val movieDiffUtil: DiffUtil.ItemCallback<Movie>
             binding.rvText.text = movie.title
             Glide.with(context).load(Constants.IMAGE_URL + movie.poster_path).into(binding.rvImage)
         }
+
+        fun onClick(movie: Movie) {
+            binding.root.setOnClickListener {
+                onItemClick(movie)
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainViewHolder {
@@ -36,8 +45,8 @@ class MainRecycleAdapter(private val movieDiffUtil: DiffUtil.ItemCallback<Movie>
 
     override fun onBindViewHolder(holder: MainViewHolder, position: Int) {
         holder.bindData(getItem(position)!!)
+        holder.onClick(getItem(position)!!)
     }
-
 
 
 }
