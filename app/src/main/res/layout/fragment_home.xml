@@ -32,6 +32,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="15dp"
                     android:layout_marginTop="15dp"
+                    android:src="@drawable/mina_img"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,17 +48,30 @@
                     app:layout_constraintStart_toEndOf="@id/app_icon"
                     app:layout_constraintTop_toTopOf="@id/app_icon" />
 
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/search_view"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/search_card"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/search_view_shape"
-                    android:backgroundTintMode="multiply"
+                    android:layout_marginTop="10dp"
+                    app:cardBackgroundColor="#454343"
+                    app:cardElevation="8dp"
+                    app:cardUseCompatPadding="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/app_icon"
-                    app:layout_constraintWidth_percent="0.9" />
+                    app:layout_constraintWidth_percent="0.9">
+
+                    <androidx.appcompat.widget.SearchView
+                        android:id="@+id/search_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/app_dark_color"
+                        app:iconifiedByDefault="false"
+                        app:queryBackground="@android:color/transparent"
+                        app:queryHint="Search here ..."
+                        app:searchHintIcon="@drawable/search_icon"
+                        app:searchIcon="@drawable/search_icon" />
+                </com.google.android.material.card.MaterialCardView>
 
 
                 <androidx.viewpager2.widget.ViewPager2
@@ -65,9 +79,9 @@
                     android:layout_width="0dp"
                     android:layout_height="220dp"
                     android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="@id/search_view"
-                    app:layout_constraintStart_toStartOf="@id/search_view"
-                    app:layout_constraintTop_toBottomOf="@id/search_view" />
+                    app:layout_constraintEnd_toEndOf="@id/search_card"
+                    app:layout_constraintStart_toStartOf="@id/search_card"
+                    app:layout_constraintTop_toBottomOf="@id/search_card" />
 
                 <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
                     android:id="@+id/view_pager_dots"
@@ -106,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        />
+        android:visibility="gone" />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

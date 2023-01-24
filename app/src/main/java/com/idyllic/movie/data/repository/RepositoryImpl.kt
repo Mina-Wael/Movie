@@ -1,7 +1,12 @@
 package com.idyllic.movie.data.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import com.idyllic.movie.data.remotesource.MovieApi
+import com.idyllic.movie.data.remotesource.SearchPagingSource
+import com.idyllic.movie.domain.model.Movie
 import com.idyllic.movie.domain.model.MoviePojoResult
 import com.idyllic.movie.domain.repository.RepositoryIntr
 import com.idyllic.movie.utils.Resource
@@ -44,4 +49,12 @@ class RepositoryImpl @Inject constructor(private val api: MovieApi) : Repository
             emit(Resource.Fail("Check your network connection"))
         }
     }
+
+    override fun getSearchResult(query: String): LiveData<PagingData<Movie>> = Pager(
+        // Configure how data is loaded by passing additional properties to
+        // PagingConfig, such as prefetchDistance.
+        PagingConfig(pageSize = 20)
+    ) {
+        SearchPagingSource(query, api)
+    }.liveData
 }

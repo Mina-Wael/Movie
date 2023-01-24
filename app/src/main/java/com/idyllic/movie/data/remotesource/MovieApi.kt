@@ -17,12 +17,12 @@ interface MovieApi {
     @GET("search/movie")
     suspend fun search(
         @Query("api_key") apiKey: String = Constants.API_KEY,
-        @Query("query") movieName: String, page: Int = 1
+        @Query("query") movieName: String, @Query("page") page: Int = 1
     ): Response<MoviePojoResult>
 
     @GET("trending/movie/day")
     suspend fun getTrendingMovies(
         @Query("api_key") apiKey: String = Constants.API_KEY,
-        @Query("page") page: Int = 1
+        @Query("page") page: Int
     ): Response<MoviePojoResult>
 }
