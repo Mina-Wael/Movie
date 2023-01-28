@@ -7,6 +7,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.idyllic.movie.databinding.HomeRecyclerRowBinding
 import com.idyllic.movie.domain.model.Movie
@@ -26,8 +27,11 @@ class MainRecycleAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bindData(movie: Movie) {
+
             binding.rvText.text = movie.title
-            Glide.with(context).load(Constants.IMAGE_URL + movie.poster_path).into(binding.rvImage)
+            Glide.with(context).load(Constants.IMAGE_URL + movie.poster_path)
+                .placeholder(CircularProgressDrawable(context))
+                .into(binding.rvImage)
         }
 
         fun onClick(movie: Movie) {

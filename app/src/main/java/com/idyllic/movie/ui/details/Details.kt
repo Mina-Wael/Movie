@@ -11,16 +11,21 @@ import com.bumptech.glide.Glide
 import com.idyllic.movie.R
 import com.idyllic.movie.databinding.FragmentDetailsBinding
 import com.idyllic.movie.domain.model.Movie
+import com.idyllic.movie.domain.model.toSavedMovie
+import com.idyllic.movie.utils.Common.showSnackBar
 import com.idyllic.movie.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class Details : Fragment() {
 
-    val viewModel: DetailsViewModel by viewModels()
+    private val viewModel: DetailsViewModel by viewModels()
 
-    val args: DetailsArgs by navArgs()
+    private val args: DetailsArgs by navArgs()
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
+    private var isPressed = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,15 +39,29 @@ class Details : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setDataToUi(args.movie)
+
+        binding.btnSave.setOnClickListener {
+            if (isPressed) {
+                viewModel.deleteMovie(args.movie.toSavedMovie())
+                binding.btnSave.setImageResource(R.drawable.favorite_border)
+            } else {
+                binding.btnSave.setImageResource(R.drawable.favorite_icon)
+                viewModel.saveMovie(args.movie.toSavedMovie())
+                showSnackBar(binding.root, "Saved")
+            }
+            isPressed = !isPressed
+        }
     }
 
     private fun setDataToUi(movie: Movie) {
         Glide.with(requireContext()).load(Constants.IMAGE_URL + movie.poster_path)
             .into(binding.movieImage)
         binding.movieDescription.text = movie.overview
-        binding.ratingBar.rating = movie.vote_average.toFloat() / 2
+        binding.tvRate.text = movie.vote_average.toString()
+        binding.tvDate.text = movie.release_date
 
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

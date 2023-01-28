@@ -23,4 +23,9 @@
             android:name="movie"
             app:argType="com.idyllic.movie.domain.model.Movie" />
     </fragment>
+    <fragment
+        android:id="@+id/saved"
+        android:name="com.idyllic.movie.ui.saved.Saved"
+        android:label="fragment_saved"
+        tools:layout="@layout/fragment_saved" />
 </navigation>
