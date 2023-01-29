@@ -1,5 +1,9 @@
 package com.idyllic.movie.di
 
+import android.app.Application
+import androidx.room.Room
+import com.idyllic.movie.data.localsource.MovieDao
+import com.idyllic.movie.data.localsource.MovieDatabase
 import com.idyllic.movie.data.remotesource.MovieApi
 import com.idyllic.movie.data.repository.RepositoryImpl
 import com.idyllic.movie.domain.repository.RepositoryIntr
@@ -24,6 +28,12 @@ class MovieModule {
 
     @Provides
     @Singleton
-    fun provideRepo(api: MovieApi): RepositoryIntr = RepositoryImpl(api)
+    fun provideRepo(api: MovieApi, dao: MovieDao): RepositoryIntr = RepositoryImpl(api, dao)
+
+    @Provides
+    @Singleton
+    fun provideDao(context: Application): MovieDao =
+        Room.databaseBuilder(context.applicationContext, MovieDatabase::class.java, "MovieDatabase")
+            .build().getMovieDao()
 
 }
