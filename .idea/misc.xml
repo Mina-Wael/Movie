@@ -3,15 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/drawable/dialog_background_shape.xml" value="0.1495" />
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/drawable/favorite_icon.xml" value="0.1495" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/drawable/image_corner_shape.xml" value="0.1405" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/drawable/search_view_shape.xml" value="0.1405" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/layout-v31/view_pager_row.xml" value="0.18802083333333333" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/activity_main.xml" value="0.15433946130825138" />
-        <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/fragment_details.xml" value="0.18" />
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/delete_dialog.xml" value="0.25" />
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/favorite_recycler_row.xml" value="0.2" />
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/fragment_details.xml" value="0.2" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/fragment_home.xml" value="0.16" />
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/fragment_saved.xml" value="0.15433946130825138" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/home_recycler_row.xml" value="0.15348439504061565" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/home_try.xml" value="0.15348439504061565" />
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/search_recycler_row.xml" value="0.25" />
         <entry key="..\:/MinaApps/Movie/app/src/main/res/layout/view_pager_row.xml" value="0.15348439504061565" />
+        <entry key="..\:/MinaApps/Movie/app/src/main/res/menu/nav_bottom_menu.xml" value="0.15348439504061565" />
       </map>
     </option>
   </component>
