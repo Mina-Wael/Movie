@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.idyllic.movie.databinding.ViewPagerRowBinding
 import com.idyllic.movie.domain.model.Movie
@@ -21,8 +22,9 @@ class ViewPagerAdapter : RecyclerView.Adapter<ViewPagerAdapter.ViewPagerHolder>(
         RecyclerView.ViewHolder(binding.root) {
 
         fun setData(movie: Movie) {
-           // binding.title.text = movie.title
-            Glide.with(context).load( IMAGE_URL + movie.poster_path)
+            // binding.title.text = movie.title
+            Glide.with(context).load(IMAGE_URL + movie.poster_path)
+                .placeholder(CircularProgressDrawable(context))
                 .into(binding.image)
             binding.tvRate.text = movie.vote_average.toString()
         }
