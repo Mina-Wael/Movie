@@ -18,3 +18,18 @@ data class Movie(
     val vote_average: Double,
     val vote_count: Int
 ) : Serializable
+
+ fun Movie.toSavedMovie(): MovieTable = MovieTable(
+    id,
+    adult,
+    backdrop_path,
+    original_language,
+    original_title,
+    overview,
+    popularity,
+    poster_path,
+    release_date,
+    title,
+    vote_average,
+    vote_count
+)

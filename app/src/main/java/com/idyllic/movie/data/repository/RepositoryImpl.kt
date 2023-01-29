@@ -1,13 +1,13 @@
 package com.idyllic.movie.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
 import androidx.paging.*
+import com.idyllic.movie.data.localsource.MovieDao
 import com.idyllic.movie.data.remotesource.MovieApi
 import com.idyllic.movie.data.remotesource.SearchPagingSource
 import com.idyllic.movie.domain.model.Movie
 import com.idyllic.movie.domain.model.MoviePojoResult
+import com.idyllic.movie.domain.model.MovieTable
 import com.idyllic.movie.domain.repository.RepositoryIntr
 import com.idyllic.movie.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,8 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-class RepositoryImpl @Inject constructor(private val api: MovieApi) : RepositoryIntr {
+class RepositoryImpl @Inject constructor(private val api: MovieApi, private val dao: MovieDao) :
+    RepositoryIntr {
 
     override fun getTopRatedMovies(): Flow<Resource<MoviePojoResult>> = flow {
         emit(Resource.Loading)
@@ -57,4 +58,16 @@ class RepositoryImpl @Inject constructor(private val api: MovieApi) : Repository
     ) {
         SearchPagingSource(query, api)
     }.liveData
+
+    override suspend fun addMovie(movie: MovieTable) {
+        dao.addMovie(movie)
+    }
+
+    override suspend fun remove(movie: MovieTable) {
+        dao.remove(movie)
+    }
+
+    override suspend fun getAllMovies(): List<MovieTable> {
+        return dao.getAllMovies()
+    }
 }
