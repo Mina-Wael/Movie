@@ -22,4 +22,11 @@
         <item name="colorControlNormal">#D3D3D3</item>
         <item name="colorControlActivated">#FFD801</item>
     </style>
+
+    <style name="AppSplash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_icon</item>
+        <item name="android:navigationBarColor">@color/app_icon</item>
+        <item name="android:layout">@layout/splash_screen</item>
+        <item name="android:drawable">@layout/splash_screen</item>
+    </style>
 </resources>

@@ -9,9 +9,11 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.idyllic.movie.databinding.ViewPagerRowBinding
 import com.idyllic.movie.domain.model.Movie
+import com.idyllic.movie.utils.Common
 import com.idyllic.movie.utils.Constants.IMAGE_URL
 
-class ViewPagerAdapter : RecyclerView.Adapter<ViewPagerAdapter.ViewPagerHolder>() {
+class ViewPagerAdapter(private val appContext: Context) :
+    RecyclerView.Adapter<ViewPagerAdapter.ViewPagerHolder>() {
 
     private var movies: List<Movie> = emptyList()
 
@@ -23,8 +25,7 @@ class ViewPagerAdapter : RecyclerView.Adapter<ViewPagerAdapter.ViewPagerHolder>(
 
         fun setData(movie: Movie) {
             // binding.title.text = movie.title
-            Glide.with(context).load(IMAGE_URL + movie.poster_path)
-                .placeholder(CircularProgressDrawable(context))
+            Glide.with(appContext).load(IMAGE_URL + movie.poster_path)
                 .into(binding.image)
             binding.tvRate.text = movie.vote_average.toString()
         }

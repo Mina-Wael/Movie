@@ -15,15 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.LoadStates
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.idyllic.movie.databinding.FragmentHomeBinding
+import com.idyllic.movie.MainActivity
 import com.idyllic.movie.domain.model.Movie
 import com.idyllic.movie.utils.Resource
+import com.idyllic.movie.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -39,7 +37,7 @@ class Home : Fragment() {
     private var _mainRecyclerAdapter: MainRecycleAdapter? = null
     private val mainRecyclerAdapter get() = _mainRecyclerAdapter!!
 
-    private var _searchAdapter: MainRecycleAdapter? = null
+    private var _searchAdapter: SearchAdapter? = null
     private val searchAdapter get() = _searchAdapter!!
 
     private val viewModel: HomeViewModel by viewModels()
@@ -60,50 +58,57 @@ class Home : Fragment() {
 
         setupViewPager()
         setUpMainRecycler()
+        setUpSearchRecycler()
         setupSearch()
+        startListenToMainFlow()
+        setPagingLoading()
 
-        _searchAdapter = MainRecycleAdapter(MovieDiffUtil, onItemClick)
 
         viewModel.getTopRatedMovie()
-
         listenToTopRatedMovies()
-
-        binding.searchView.setOnQueryTextFocusChangeListener { p0, p1 ->
-            if (p1) {
-                hideViewPager()
-                Log.i("TAG", "hide: ")
-            } else {
-                if (isTextNull) {
-                    showViewPager()
-                    Log.i("TAG", "show: ")
-                    binding.mainRecycler.adapter = mainRecyclerAdapter
-                    searchAdapter.submitData(viewLifecycleOwner.lifecycle, PagingData.empty())
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.flow.collectLatest {
-                    mainRecyclerAdapter.submitData(it)
-                }
-
-                mainRecyclerAdapter.loadStateFlow.collect() {
-                    val state = it.refresh
-                    binding.progress.isVisible = state is LoadState.Loading
-
-                }
-            }
-        }
-
-        viewModel.searchFlow.observe(viewLifecycleOwner, Observer {
-            searchAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-        })
+        startListenToSearchResult()
 
 
     }
 
+    private fun setListenerToSearchView() {
+        binding.searchView.setOnQueryTextFocusChangeListener { p0, p1 ->
+            if (p1) {
+                hideViewPager()
+                hideMainRecycler()
+                showSearchRecycler()
+                (activity as MainActivity).hideBottomNavigation()
+            } else {
+                if (isTextNull) {
+                    showViewPager()
+                    showMainRecycler()
+                    hideSearchRecycler()
+                    searchAdapter.setList(emptyList())
+                }
+                (activity as MainActivity).showBottomNavigation()
+            }
+        }
+    }
+
+
+    private fun startListenToSearchResult() {
+        viewModel.searchLiveData.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is Resource.Loading -> {
+                    binding.progress.visibility = View.VISIBLE
+                }
+                is Resource.Success -> {
+                    binding.progress.visibility = View.GONE
+                    searchAdapter.setList(it.data.results)
+                }
+                is Resource.Fail -> {}
+            }
+        })
+
+    }
+
     private fun setupSearch() {
+        setListenerToSearchView()
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
@@ -112,15 +117,12 @@ class Home : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (!newText.isNullOrEmpty()) {
                     viewModel.search(newText)
-                    isTextNull = false
-                    if (binding.mainRecycler.adapter == mainRecyclerAdapter)
-                        binding.mainRecycler.adapter = searchAdapter
+
                 } else {
-                    isTextNull = true
-                    showViewPager()
-                    binding.mainRecycler.adapter = mainRecyclerAdapter
-                    searchAdapter.submitData(viewLifecycleOwner.lifecycle, PagingData.empty())
+                    // showViewPager()
+                    searchAdapter.setList(emptyList())
                 }
+                isTextNull = newText.isNullOrEmpty()
                 return true
             }
         })
@@ -134,10 +136,22 @@ class Home : Fragment() {
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            viewPagerAdapter.setList(it.data.results.slice(10..15))
+                            viewPagerAdapter.setList(it.data.results.slice(5..10))
+                            showViewPager()
+                            showMainRecycler()
                         }
                         is Resource.Fail -> {}
                     }
+                }
+            }
+        }
+    }
+
+    private fun startListenToMainFlow() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.flow.collect {
+                    mainRecyclerAdapter.submitData(it)
                 }
             }
         }
@@ -152,8 +166,16 @@ class Home : Fragment() {
         }
     }
 
+    private fun setUpSearchRecycler() {
+        _searchAdapter = SearchAdapter(MovieDiffUtil, onItemClick)
+        binding.searchRecycler.apply {
+            adapter = searchAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+        }
+    }
+
     private fun setupViewPager() {
-        _viewPagerAdapter = ViewPagerAdapter()
+        _viewPagerAdapter = ViewPagerAdapter(requireContext())
         binding.viewPager.apply {
             adapter = viewPagerAdapter
         }
@@ -163,15 +185,43 @@ class Home : Fragment() {
     private fun hideViewPager() {
         binding.viewPager.visibility = View.GONE
         binding.viewPagerDots.visibility = View.GONE
+        binding.topRated.visibility = View.GONE
     }
 
     private fun showViewPager() {
         binding.viewPager.visibility = View.VISIBLE
         binding.viewPagerDots.visibility = View.VISIBLE
+        binding.topRated.visibility = View.VISIBLE
+    }
+
+    private fun hideMainRecycler() {
+        binding.mainRecycler.visibility = View.GONE
+        binding.upCome.visibility = View.GONE
+    }
+
+    private fun showMainRecycler() {
+        binding.mainRecycler.visibility = View.VISIBLE
+        binding.upCome.visibility = View.VISIBLE
+    }
+
+    private fun hideSearchRecycler() {
+        binding.searchRecycler.visibility = View.GONE
+    }
+
+    private fun showSearchRecycler() {
+        binding.searchRecycler.visibility = View.VISIBLE
     }
 
     private val onItemClick = fun(movie: Movie) {
         findNavController().navigate(HomeDirections.actionHome2ToDetails(movie))
+    }
+
+    private fun setPagingLoading() {
+        lifecycleScope.launch {
+            mainRecyclerAdapter.loadStateFlow.collectLatest { loadState ->
+                binding.progress.isVisible = loadState.refresh is LoadState.Loading
+            }
+        }
     }
 
 }

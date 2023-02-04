@@ -2,6 +2,7 @@ package com.idyllic.movie
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.idyllic.movie.databinding.ActivityMainBinding
@@ -14,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_Movie)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -23,6 +25,14 @@ class MainActivity : AppCompatActivity() {
         binding.navView.setupWithNavController(navController)
 
 
+    }
+
+    fun hideBottomNavigation() {
+        binding.navView.visibility = View.GONE
+    }
+
+    fun showBottomNavigation() {
+        binding.navView.visibility = View.VISIBLE
     }
 
 }
