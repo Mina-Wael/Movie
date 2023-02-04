@@ -15,16 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.LoadStates
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.idyllic.movie.MainActivity
-import com.idyllic.movie.databinding.FragmentHomeBinding
 import com.idyllic.movie.domain.model.Movie
 import com.idyllic.movie.utils.Resource
+import com.idyllic.movie.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -140,6 +137,8 @@ class Home : Fragment() {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
                             viewPagerAdapter.setList(it.data.results.slice(5..10))
+                            showViewPager()
+                            showMainRecycler()
                         }
                         is Resource.Fail -> {}
                     }
@@ -152,7 +151,6 @@ class Home : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.flow.collect {
-                    Log.i("TAG", "startListenToMainFlow: ")
                     mainRecyclerAdapter.submitData(it)
                 }
             }
@@ -187,19 +185,23 @@ class Home : Fragment() {
     private fun hideViewPager() {
         binding.viewPager.visibility = View.GONE
         binding.viewPagerDots.visibility = View.GONE
+        binding.topRated.visibility = View.GONE
     }
 
     private fun showViewPager() {
         binding.viewPager.visibility = View.VISIBLE
         binding.viewPagerDots.visibility = View.VISIBLE
+        binding.topRated.visibility = View.VISIBLE
     }
 
     private fun hideMainRecycler() {
         binding.mainRecycler.visibility = View.GONE
+        binding.upCome.visibility = View.GONE
     }
 
     private fun showMainRecycler() {
         binding.mainRecycler.visibility = View.VISIBLE
+        binding.upCome.visibility = View.VISIBLE
     }
 
     private fun hideSearchRecycler() {
