@@ -132,7 +132,6 @@ class Home : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.movieStateFlow.collect {
-
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {

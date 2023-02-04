@@ -41,6 +41,7 @@
             android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:textColor="@color/white"
+            android:visibility="gone"
             app:drawableLeftCompat="@drawable/ic_baseline_star_rate_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
