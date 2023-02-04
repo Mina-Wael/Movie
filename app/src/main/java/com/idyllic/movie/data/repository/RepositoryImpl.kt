@@ -22,7 +22,7 @@ class RepositoryImpl @Inject constructor(private val api: MovieApi, private val 
     override fun getTopRatedMovies(): Flow<Resource<MoviePojoResult>> = flow {
         emit(Resource.Loading)
         try {
-            val res = api.getTopRatedMovies(page = 2)
+            val res = api.getTopRatedMovies(page = 3)
             if (res.isSuccessful)
                 emit(Resource.Success(res.body()!!))
             else
