@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(
     val movieStateFlow: StateFlow<Resource<MoviePojoResult>> = _movieStateFlow
 
     private val _searchLiveData = MutableLiveData<Resource<MoviePojoResult>>()
-     val searchLiveData: LiveData<Resource<MoviePojoResult>> = _searchLiveData
+    val searchLiveData: LiveData<Resource<MoviePojoResult>> = _searchLiveData
 
 
     var searchJob: Job? = null
@@ -51,5 +51,12 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
+    val flow = Pager(
+
+        PagingConfig(pageSize = 20)
+    ) {
+        MoviePagingSource(api)
+    }.flow.cachedIn(viewModelScope)
 
 }

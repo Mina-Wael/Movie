@@ -11,6 +11,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.idyllic.movie.databinding.HomeRecyclerRowBinding
 import com.idyllic.movie.domain.model.Movie
+import com.idyllic.movie.utils.Common
 import com.idyllic.movie.utils.Constants
 
 class MainRecycleAdapter(
@@ -30,7 +31,7 @@ class MainRecycleAdapter(
 
             binding.rvText.text = movie.title
             Glide.with(context).load(Constants.IMAGE_URL + movie.poster_path)
-                .placeholder(CircularProgressDrawable(context))
+                .placeholder(Common.getProgressLoading(context))
                 .into(binding.rvImage)
         }
 

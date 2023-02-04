@@ -19,6 +19,7 @@ import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.idyllic.movie.MainActivity
 import com.idyllic.movie.databinding.FragmentHomeBinding
 import com.idyllic.movie.domain.model.Movie
 import com.idyllic.movie.utils.Resource
@@ -58,11 +59,12 @@ class Home : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _searchAdapter = SearchAdapter(MovieDiffUtil)
         setupViewPager()
         setUpMainRecycler()
         setUpSearchRecycler()
         setupSearch()
+        startListenToMainFlow()
+        setPagingLoading()
 
 
         viewModel.getTopRatedMovie()
@@ -78,14 +80,15 @@ class Home : Fragment() {
                 hideViewPager()
                 hideMainRecycler()
                 showSearchRecycler()
-                Log.i("TAG", "hide: ")
+                (activity as MainActivity).hideBottomNavigation()
             } else {
                 if (isTextNull) {
                     showViewPager()
                     showMainRecycler()
                     hideSearchRecycler()
-                    Log.i("TAG", "show: ")
+                    searchAdapter.setList(emptyList())
                 }
+                (activity as MainActivity).showBottomNavigation()
             }
         }
     }
@@ -94,8 +97,11 @@ class Home : Fragment() {
     private fun startListenToSearchResult() {
         viewModel.searchLiveData.observe(viewLifecycleOwner, Observer {
             when (it) {
-                is Resource.Loading -> {}
+                is Resource.Loading -> {
+                    binding.progress.visibility = View.VISIBLE
+                }
                 is Resource.Success -> {
+                    binding.progress.visibility = View.GONE
                     searchAdapter.setList(it.data.results)
                 }
                 is Resource.Fail -> {}
@@ -117,8 +123,9 @@ class Home : Fragment() {
 
                 } else {
                     // showViewPager()
-                    //  searchAdapter.setList()
+                    searchAdapter.setList(emptyList())
                 }
+                isTextNull = newText.isNullOrEmpty()
                 return true
             }
         })
@@ -132,10 +139,21 @@ class Home : Fragment() {
                     when (it) {
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            viewPagerAdapter.setList(it.data.results.slice(10..15))
+                            viewPagerAdapter.setList(it.data.results.slice(5..10))
                         }
                         is Resource.Fail -> {}
                     }
+                }
+            }
+        }
+    }
+
+    private fun startListenToMainFlow() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.flow.collect {
+                    Log.i("TAG", "startListenToMainFlow: ")
+                    mainRecyclerAdapter.submitData(it)
                 }
             }
         }
@@ -151,7 +169,7 @@ class Home : Fragment() {
     }
 
     private fun setUpSearchRecycler() {
-        _mainRecyclerAdapter = MainRecycleAdapter(MovieDiffUtil, onItemClick)
+        _searchAdapter = SearchAdapter(MovieDiffUtil, onItemClick)
         binding.searchRecycler.apply {
             adapter = searchAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -159,7 +177,7 @@ class Home : Fragment() {
     }
 
     private fun setupViewPager() {
-        _viewPagerAdapter = ViewPagerAdapter()
+        _viewPagerAdapter = ViewPagerAdapter(requireContext())
         binding.viewPager.apply {
             adapter = viewPagerAdapter
         }
@@ -194,6 +212,14 @@ class Home : Fragment() {
 
     private val onItemClick = fun(movie: Movie) {
         findNavController().navigate(HomeDirections.actionHome2ToDetails(movie))
+    }
+
+    private fun setPagingLoading() {
+        lifecycleScope.launch {
+            mainRecyclerAdapter.loadStateFlow.collectLatest { loadState ->
+                binding.progress.isVisible = loadState.refresh is LoadState.Loading
+            }
+        }
     }
 
 }
