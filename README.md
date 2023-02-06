@@ -7,11 +7,11 @@ It's an android application that shows top rated and upcoming movies and allows 
 * Coroutine
 * MVVM
 * Retrofit
-* Romm database
+* Room database
 * Repository Pattern
 * Dependency injection (Hilt)
 * LiveData
-* Stateflow
+* Flow
 * Pagination (paging 3)
 * Navigation Component
 * Clean architecture
